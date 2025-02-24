@@ -11,6 +11,8 @@ import com.ibm.cloud.cloudant.v1.Cloudant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 @Singleton
 public class CloudantDataService {
 
@@ -23,6 +25,8 @@ public class CloudantDataService {
     @Property(name = "cloudant.api.key")
     protected String API_KEY;
 
+    @Property(name = "cloudant.database")
+    protected String DATABASE;
 
     private Cloudant cloudantService;
 
@@ -41,17 +45,14 @@ public class CloudantDataService {
     public void test() {
         ServerInformation response = cloudantService.getServerInformation().execute().getResult();
         System.out.println(response);
-
-        createDatabase("test");
-        createDocument("test", "foobar");
-        updateDocument("test", "foobar");
+        createDatabase();
     }
 
 
     // 2. Create a database ===============================================
-    public void createDatabase(String databaseName) {
+    public void createDatabase() {
         PutDatabaseOptions putDbOptions =
-            new PutDatabaseOptions.Builder().db(databaseName).build();
+            new PutDatabaseOptions.Builder().db(DATABASE).build();
 
         // Try to create database if it doesn't exist
         try {
@@ -61,12 +62,12 @@ public class CloudantDataService {
                 .getResult();
 
             if (putDatabaseResult.isOk()) {
-                log.info("Database created: {}", databaseName);
+                log.info("Database created: {}", DATABASE);
             }
         } catch (ServiceResponseException sre) {
             log.warn("createDatabase() - Service Response Status Code: {}", sre.getStatusCode());
             if (sre.getStatusCode() == 412)
-                log.error("createDatabase() - Database already exists: {}", databaseName);
+                log.error("createDatabase() - Database already exists: {}", DATABASE);
         }
 
     }
@@ -74,22 +75,24 @@ public class CloudantDataService {
 
 
     // 3. Create a document ===============================================
-    public void createDocument(String databaseName, String documentName) {
+    public void createDocument(String documentId, Map<String,Object> properties) {
 
         Document newDocument = new Document();
 
         // Setting id for the document is optional when "postDocument" method is used for CREATE.
         // When id is not provided the server will generate one for your document.
-        newDocument.setId(documentName);
+        newDocument.setId(documentId);
+
+        newDocument.setProperties(properties);
 
         // Add "name" and "joined" fields to the document
-        newDocument.put("name", "Bob Smith");
-        newDocument.put("joined", "2019-01-24T10:42:59.000Z");
+        //newDocument.put("name", "Bob Smith");
+        //newDocument.put("joined", "2019-01-24T10:42:59.000Z");
 
                 // Save the document in the database with "postDocument" method
         PostDocumentOptions createDocumentOptions =
             new PostDocumentOptions.Builder()
-                .db(databaseName)
+                .db(DATABASE)
                 .document(newDocument)
                 .build();
 
@@ -100,7 +103,7 @@ public class CloudantDataService {
                 .getResult();
 
             newDocument.setRev(createDocumentResponse.getRev());
-            log.info("createDocument() - Document created: {}", documentName);
+            log.info("createDocument() - Document created: {}", documentId);
 
         } catch (ServiceResponseException sre) {
             log.warn("createDocument() - Service Response Status Code: {}", sre.getStatusCode());
@@ -109,11 +112,11 @@ public class CloudantDataService {
     }
 
 
-    public void updateDocument(String databaseName, String documentName) {
+    public void updateDocument(String documentName) {
 
         GetDocumentOptions documentInfoOptions =
             new GetDocumentOptions.Builder()
-                .db(databaseName)
+                .db(DATABASE)
                 .docId(documentName)
                 .build();
 
@@ -142,7 +145,7 @@ public class CloudantDataService {
             // Update the document in the database
             PostDocumentOptions updateDocumentOptions =
                 new PostDocumentOptions.Builder()
-                    .db(databaseName)
+                    .db(DATABASE)
                     .document(document)
                     .build();
 

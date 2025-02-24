@@ -15,6 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller("/")
 public class DefaultController {
@@ -35,18 +38,34 @@ public class DefaultController {
         return HttpResponse.ok();
     }
 
-    @Post(value = "/upload", consumes = { MediaType.MULTIPART_FORM_DATA },  produces = MediaType.TEXT_HTML )
-    public HttpResponse<?> upload(@Part CompletedFileUpload file) throws IOException {
-        log.info("upload() - file={}", file.getFilename());
+    @Post(value = "/ingest", consumes = { MediaType.MULTIPART_FORM_DATA },  produces = MediaType.TEXT_HTML )
+    public HttpResponse<?> upload(@Part CompletedFileUpload image, String station) throws IOException {
+        log.info("ingest() - image={}, station={}", image.getFilename(), station);
 
-        // TODO: Save to COS
-        //FileOutputStream fout = new FileOutputStream("/tmp/dnc-update.zip");
-        //fout.write(file.getBytes());
-        //fout.close();
+        ZonedDateTime now = ZonedDateTime.now();
+        String image_path = String.format("%s/%d/%d/%d/%s",
+            station,
+            now.getYear(),
+            now.getMonthValue(),
+            now.getDayOfMonth(),
+            image.getFilename());
 
-        return HttpResponse.ok("OK.");
-        //return HttpResponse.badRequest("Error.");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("created_at", now.toString());
+        properties.put("image_path", image_path);
+        properties.put("station_id", station);
+
+
+        try {
+            objectStorageService.createBinaryFile(image_path, String.valueOf(image.getContentType()), image.getBytes());
+            cloudantDataService.createDocument(image_path, properties);
+            return HttpResponse.ok("OK.");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return HttpResponse.badRequest("Error.");
+        }
 
     }
+
 
 }

@@ -66,8 +66,8 @@ public class ObjectStorageService {
     public void test() {
         //listBuckets(cosClient);
         listObjects(COS_BUCKET_NAME);
-        createTextFile(COS_BUCKET_NAME, "testFile.txt", "Content of text file in COS created at " + new Date().toString());
-        String foo = readTextFile(COS_BUCKET_NAME, "testFile.txt");
+        createTextFile("testFile.txt", "Content of text file in COS created at " + new Date());
+        String foo = readTextFile("testFile.txt");
         log.info("We got the following text: {}", foo);
     }
 
@@ -106,7 +106,7 @@ public class ObjectStorageService {
     }
 
 
-    public void createTextFile(String bucketName, String itemName, String fileText) {
+    public void createTextFile(String itemName, String fileText) {
 
         byte[] arr = fileText.getBytes(StandardCharsets.UTF_8);
         InputStream newStream = new ByteArrayInputStream(arr);
@@ -115,16 +115,16 @@ public class ObjectStorageService {
         metadata.setContentLength(arr.length);
         metadata.setContentType("text/plain");
 
-        PutObjectRequest req = new PutObjectRequest(bucketName, itemName, newStream, metadata);
+        PutObjectRequest req = new PutObjectRequest(COS_BUCKET_NAME, itemName, newStream, metadata);
         cosClient.putObject(req);
 
         log.info("Item: {} created!", itemName);
     }
 
 
-    public String readTextFile(String bucketName, String itemName) {
+    public String readTextFile(String itemName) {
 
-        GetObjectRequest req = new GetObjectRequest(bucketName, itemName);
+        GetObjectRequest req = new GetObjectRequest(COS_BUCKET_NAME, itemName);
         S3Object object = cosClient.getObject(req);
 
         String output = "";
@@ -134,6 +134,21 @@ public class ObjectStorageService {
             log.error("readTextFile Error: {}", e.getMessage());
         }
         return output;
+    }
+
+
+    public void createBinaryFile(String itemName, String contentType, byte[] data) {
+
+        InputStream newStream = new ByteArrayInputStream(data);
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(data.length);
+        metadata.setContentType(contentType);
+
+        PutObjectRequest req = new PutObjectRequest(COS_BUCKET_NAME, itemName, newStream, metadata);
+        PutObjectResult res = cosClient.putObject(req);
+
+        log.info("Item: {} created!", itemName);
     }
 
 
