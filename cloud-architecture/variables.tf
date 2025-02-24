@@ -30,3 +30,9 @@ variable "db_name" {
     type = string
     default = "birdtag"
 }
+
+variable "api_key" {
+    description = "IBM Cloud API Key"
+    type = string
+    sensitive = true
+}

@@ -19,7 +19,7 @@ resource "ibm_resource_group" "this" {
 
 # COS Resource
 resource "ibm_resource_instance" "cos" {
-  name              = "${var.group}-cos"
+  name              = var.prefix
   service           = "cloud-object-storage"
   plan              = "standard"
   location          = "global"
@@ -64,7 +64,7 @@ resource "ibm_cos_bucket" "image_bucket" {
 
 
 resource "ibm_cloudant" "this" {
-  name     = "${var.prefix}-cloudant"
+  name     = var.prefix
   location = var.region
   plan     = "standard"
   resource_group_id = ibm_resource_group.this.id
@@ -89,7 +89,7 @@ resource "ibm_cloudant_database" "this" {
 ###
 
 resource "ibm_code_engine_project" "this" {
-   name = "${var.prefix}-project"
+   name = var.prefix
    resource_group_id = ibm_resource_group.this.id
 }
 
@@ -100,11 +100,60 @@ resource "ibm_code_engine_app" "ingest_app" {
   #image_reference = "docker.io/mnellemann/birdtag-ingest:latest"
   image_port      = var.ingest_port
 
+  #scale_min_instances = 1      # default is 0
+  scale_max_instances = 3
+  scale_initial_instances = 1
   
+  # https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo
+  scale_cpu_limit = "0.125"
+  scale_memory_limit = "500M"
+
+  run_env_variables {
+    type  = "literal"
+    name  = "CLOUDANT_API_KEY"
+    value = var.api_key
+  }
+
   run_env_variables {
     type  = "literal"
     name  = "CLOUDANT_URL"
     value = ibm_cloudant.this.resource_id
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "CLOUDANT_URL"
+    value = ibm_cloudant.this.resource_id
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_API_KEY"
+    value = var.api_key
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_CRN"
+    value = ibm_cos_bucket.image_bucket.crn
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_LOCATION"
+    value = ibm_cos_bucket.image_bucket.region_location
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_ENDPOINT"
+    value = ibm_cos_bucket.image_bucket.region_location
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_BUCKET"
+    value = ibm_cos_bucket.image_bucket.bucket_name
   }
 
   lifecycle {
@@ -114,6 +163,11 @@ resource "ibm_code_engine_app" "ingest_app" {
     ]
   }
 
+  probe_readiness {
+    type = "http"
+    path = "/"
+    timeout = 30
+  }
 
 }
 
@@ -124,11 +178,72 @@ resource "ibm_code_engine_app" "present_app" {
   image_reference = "docker.io/mnellemann/hellotide:latest"
   #image_reference = "docker.io/mnellemann/birdtag-ingest:latest"
 
+  #scale_min_instances = 1  # default is 0
+  scale_max_instances = 3
+  scale_initial_instances = 1
+  
+  scale_cpu_limit = "0.125"
+  scale_memory_limit = "500M"
+
+run_env_variables {
+    type  = "literal"
+    name  = "CLOUDANT_API_KEY"
+    value = var.api_key
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "CLOUDANT_URL"
+    value = ibm_cloudant.this.resource_id
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "CLOUDANT_URL"
+    value = ibm_cloudant.this.resource_id
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_API_KEY"
+    value = var.api_key
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_CRN"
+    value = ibm_cos_bucket.image_bucket.crn
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_LOCATION"
+    value = ibm_cos_bucket.image_bucket.region_location
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_ENDPOINT"
+    value = ibm_cos_bucket.image_bucket.region_location
+  }
+
+  run_env_variables {
+    type  = "literal"
+    name  = "COS_BUCKET"
+    value = ibm_cos_bucket.image_bucket.bucket_name
+  }
+
   lifecycle {
     create_before_destroy = true
     ignore_changes = [
       run_env_variables,
     ]
+  }
+
+  probe_readiness {
+    type = "http"
+    path = "/"
+    timeout = 30
   }
 
 }
