@@ -6,9 +6,8 @@ variable "region" {
     default     = "eu-de"
 }
 
-
 variable "group" {
-    description = "Resource group for all created."
+    description = "Resource group for all resources created."
     type        = string
     default     = "BirdTagging-Demo"
 }
@@ -23,12 +22,6 @@ variable "ingest_port" {
     description = "Internal port number of ingest container."
     type        = number
     default     = 8080
-}
-
-variable "db_name" {
-    description = "Name of Cloudant database"
-    type = string
-    default = "birdtag"
 }
 
 variable "api_key" {

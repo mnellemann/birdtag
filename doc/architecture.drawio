@@ -1,0 +1,108 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.9 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.9">
+  <diagram name="Page-1" id="Q8GbGfSfuZjNKzfDX2Cj">
+    <mxGraphModel dx="1413" dy="1021" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XgvVe0AozkowDUR7AYfe-30" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;b&gt;IBM Cloud&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="400" y="40" width="761" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-1" target="XgvVe0AozkowDUR7AYfe-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-1" value="Station 2" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.camera2;" parent="1" vertex="1">
+          <mxGeometry x="512" y="350" width="78" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="881" y="84" as="sourcePoint" />
+            <mxPoint x="971" y="114" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="926" y="84" />
+              <mxPoint x="926" y="114" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-2" value="&lt;i&gt;Detect&lt;/i&gt;&lt;div&gt;watsonx ?&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+          <mxGeometry x="761" y="55" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-3" value="COS" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="671" y="219" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-5" value="&lt;div&gt;&lt;i&gt;Result&lt;/i&gt;&lt;/div&gt;Cloudant&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DB&lt;/span&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;" parent="1" vertex="1">
+          <mxGeometry x="971" y="99" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-6" target="XgvVe0AozkowDUR7AYfe-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="701" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-20" value="Persist Image" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" parent="XgvVe0AozkowDUR7AYfe-8" vertex="1" connectable="0">
+          <mxGeometry x="0.4941" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OGYgt_izWe5zIGRI5KPA-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="XgvVe0AozkowDUR7AYfe-6" target="XgvVe0AozkowDUR7AYfe-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="OGYgt_izWe5zIGRI5KPA-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="XgvVe0AozkowDUR7AYfe-6" target="XgvVe0AozkowDUR7AYfe-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="686" y="120" />
+              <mxPoint x="686" y="85" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-6" value="&lt;i&gt;Ingest&lt;/i&gt;&lt;div&gt;Code Engine&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" parent="1" vertex="1">
+          <mxGeometry x="491" y="109" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-12" target="XgvVe0AozkowDUR7AYfe-13" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-12" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="836" y="410" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-13" target="XgvVe0AozkowDUR7AYfe-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;startArrow=classic;startFill=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-13" target="XgvVe0AozkowDUR7AYfe-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="270" />
+              <mxPoint x="701" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-13" value="Browser Dashboard" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="945.5" y="375" width="172.5" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-15" target="XgvVe0AozkowDUR7AYfe-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-15" target="XgvVe0AozkowDUR7AYfe-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-15" value="&lt;i&gt;Presentation&lt;/i&gt;&lt;div&gt;Code Engine&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" parent="1" vertex="1">
+          <mxGeometry x="971" y="229" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-21" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Bird Tagging with IBM Cloud&lt;/h1&gt;&lt;p&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Use Lite or Free-tier services.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Take picture of bird at feeding station and upload image.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Present dashboard with data:&lt;/span&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Most recent birds, by geo, time of day&lt;/li&gt;&lt;li&gt;Number of birds today, week, month&lt;/li&gt;&lt;li&gt;Kind of birds or size, color&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;Provide user input of bird kind to train future model for automatic detection ?&lt;p&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="40" width="340" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-23" target="XgvVe0AozkowDUR7AYfe-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-23" value="Station n ..." style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.camera2;" parent="1" vertex="1">
+          <mxGeometry x="601" y="401" width="78" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="XgvVe0AozkowDUR7AYfe-24" target="XgvVe0AozkowDUR7AYfe-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgvVe0AozkowDUR7AYfe-24" value="Station 1" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.camera2;" parent="1" vertex="1">
+          <mxGeometry x="421" y="401" width="78" height="62" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
