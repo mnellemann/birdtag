@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller("/")
 public class DefaultController {
@@ -42,23 +43,26 @@ public class DefaultController {
     public HttpResponse<?> upload(@Part CompletedFileUpload image, String station) throws IOException {
         log.info("ingest() - image={}, station={}", image.getFilename(), station);
 
+        UUID uuid = UUID.randomUUID();
         ZonedDateTime now = ZonedDateTime.now();
+
         String image_path = String.format("%s/%d/%d/%d/%s",
             station,
             now.getYear(),
             now.getMonthValue(),
             now.getDayOfMonth(),
-            image.getFilename());
+            getFileExtension(uuid.toString(), image.getFilename())
+        );
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("created_at", now.toString());
         properties.put("image_path", image_path);
-        properties.put("station_id", station);
-
+        properties.put("station", station);
+        properties.put("status", "new");
 
         try {
             objectStorageService.createBinaryFile(image_path, String.valueOf(image.getContentType()), image.getBytes());
-            cloudantDataService.createDocument(image_path, properties);
+            String documentId = cloudantDataService.createDocument(properties);
             return HttpResponse.ok("OK.");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -67,5 +71,13 @@ public class DefaultController {
 
     }
 
+
+    private String getFileExtension(String prefix, String filename) {
+        int lastIndexOf = filename.lastIndexOf(".");
+        if (lastIndexOf == -1) {
+            return prefix; // empty extension
+        }
+        return prefix+filename.substring(lastIndexOf);
+    }
 
 }

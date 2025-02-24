@@ -40,16 +40,16 @@ public class CloudantDataService {
 
         cloudantService = new Cloudant("cloudant", authenticator);
         cloudantService.setServiceUrl(SERVICE_URL);
-    }
-
-    public void test() {
-        ServerInformation response = cloudantService.getServerInformation().execute().getResult();
-        System.out.println(response);
         createDatabase();
     }
 
 
-    // 2. Create a database ===============================================
+    public void test() {
+        ServerInformation response = cloudantService.getServerInformation().execute().getResult();
+        System.out.println(response);
+    }
+
+
     public void createDatabase() {
         PutDatabaseOptions putDbOptions =
             new PutDatabaseOptions.Builder().db(DATABASE).build();
@@ -62,40 +62,30 @@ public class CloudantDataService {
                 .getResult();
 
             if (putDatabaseResult.isOk()) {
-                log.info("Database created: {}", DATABASE);
+                log.info("createDatabase() - Database created: {}", DATABASE);
             }
+
         } catch (ServiceResponseException sre) {
-            log.warn("createDatabase() - Service Response Status Code: {}", sre.getStatusCode());
-            if (sre.getStatusCode() == 412)
-                log.error("createDatabase() - Database already exists: {}", DATABASE);
+            if (sre.getStatusCode() == 412) {
+                log.info("createDatabase() - Database already exists: {}", DATABASE);
+            } else {
+                log.warn("createDatabase() - Service Response Status Code: {}", sre.getStatusCode());
+            }
         }
 
     }
 
 
 
-    // 3. Create a document ===============================================
-    public void createDocument(String documentId, Map<String,Object> properties) {
+    public String createDocument(Map<String,Object> properties) {
 
         Document newDocument = new Document();
-
-        // Setting id for the document is optional when "postDocument" method is used for CREATE.
-        // When id is not provided the server will generate one for your document.
-        newDocument.setId(documentId);
-
         newDocument.setProperties(properties);
-
-        // Add "name" and "joined" fields to the document
-        //newDocument.put("name", "Bob Smith");
-        //newDocument.put("joined", "2019-01-24T10:42:59.000Z");
-
-                // Save the document in the database with "postDocument" method
         PostDocumentOptions createDocumentOptions =
             new PostDocumentOptions.Builder()
                 .db(DATABASE)
                 .document(newDocument)
                 .build();
-
         try {
             DocumentResult createDocumentResponse = cloudantService
                 .postDocument(createDocumentOptions)
@@ -103,12 +93,15 @@ public class CloudantDataService {
                 .getResult();
 
             newDocument.setRev(createDocumentResponse.getRev());
-            log.info("createDocument() - Document created: {}", documentId);
+            log.info("createDocument() - Document created: {}", createDocumentResponse.getId());
+            return createDocumentResponse.getId();
 
         } catch (ServiceResponseException sre) {
             log.warn("createDocument() - Service Response Status Code: {}", sre.getStatusCode());
             log.error(sre.getMessage());
         }
+
+        return null;
     }
 
 
