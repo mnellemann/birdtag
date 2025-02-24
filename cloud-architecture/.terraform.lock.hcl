@@ -5,7 +5,7 @@ provider "registry.terraform.io/ibm-cloud/ibm" {
   version     = "1.75.2"
   constraints = ">= 1.12.0"
   hashes = [
-    "h1:WA8Mr8xMIJ1gG4b+2lHr1JpcWwPjReaZt1sSL0+poqI=",
+    "h1:3J4CrhdnrzBCiimCk4QI8nHF4nMEVgi/LYnOkF5/0uA=",
     "zh:29cb50e86ef59b05887989b1d707e6384ebe54113eec61a5a682bb41140b16e8",
     "zh:37419d153fe9a78585a44289a3b409c49cb9fecdce915d0bc52e8fe3f509bb05",
     "zh:94766da6c28265a4ba667f3c73689c88b8f2eb097afd44b4bd5646ca14caa2c5",
@@ -19,7 +19,7 @@ provider "registry.terraform.io/kreuzwerker/docker" {
   version     = "3.0.2"
   constraints = "~> 3.0.1"
   hashes = [
-    "h1:cT2ccWOtlfKYBUE60/v2/4Q6Stk1KYTNnhxSck+VPlU=",
+    "h1:XjdpVL61KtTsuPE8swok3GY8A+Bu3TZs8T2DOEpyiXo=",
     "zh:15b0a2b2b563d8d40f62f83057d91acb02cd0096f207488d8b4298a59203d64f",
     "zh:23d919de139f7cd5ebfd2ff1b94e6d9913f0977fcfc2ca02e1573be53e269f95",
     "zh:38081b3fe317c7e9555b2aaad325ad3fa516a886d2dfa8605ae6a809c1072138",

@@ -1,41 +1,29 @@
-terraform {
-  required_providers {
-    docker = {
-      source = "kreuzwerker/docker"
-      version = "~> 3.0.1"
-    }
-    ibm = {
-      source = "IBM-Cloud/ibm"
-      version = ">= 1.12.0"
-    }
-  }
-}
-
-//provider "docker" {}
-
-# Configure the IBM Provider
-provider "ibm" {
-  region = "eu-de"
-}
-
-
 
 
 
 ###
-### Resources
+### General
 ###
 
-resource "ibm_resource_group" "demo_resource_group" {
-  name     = "BirdTagging-Demo"
+# IBM Cloud Resource Group
+resource "ibm_resource_group" "this" {
+  name     = var.group
 }
 
-resource "ibm_resource_instance" "demo_resource_instance" {
-  name              = "BirdTagging-COS"
+
+
+###
+### COS Bucket
+###
+
+
+# COS Resource
+resource "ibm_resource_instance" "cos" {
+  name              = "${var.group}-cos"
   service           = "cloud-object-storage"
   plan              = "standard"
   location          = "global"
-  resource_group_id = ibm_resource_group.demo_resource_group.id
+  resource_group_id = ibm_resource_group.this.id
   #tags              = ["tag1", "tag2"]
 
   //User can increase timeouts
@@ -49,16 +37,12 @@ resource "ibm_resource_instance" "demo_resource_instance" {
 }
 
 
-
-###
-### COS Bucket
-###
-
+# COS Bucket
 resource "ibm_cos_bucket" "image_bucket" {
-  bucket_name          = "birdtagging-demo-image-bucket"
-  resource_instance_id = ibm_resource_instance.demo_resource_instance.id
+  bucket_name          = "${var.prefix}-images"
+  resource_instance_id = ibm_resource_instance.cos.id
   storage_class        = "smart"
-  region_location      = "eu-de"
+  region_location      = var.region
 
   #activity_tracking {
   #  read_data_events     = true
@@ -79,11 +63,11 @@ resource "ibm_cos_bucket" "image_bucket" {
 ###
 
 
-resource "ibm_cloudant" "demo_cloudant_instance" {
-  name     = "cloudant-birdtag-demo"
-  location = "eu-de"
+resource "ibm_cloudant" "this" {
+  name     = "${var.prefix}-cloudant"
+  location = var.region
   plan     = "standard"
-  resource_group_id = ibm_resource_group.demo_resource_group.id
+  resource_group_id = ibm_resource_group.this.id
 
   legacy_credentials  = false
   include_data_events = false
@@ -93,9 +77,9 @@ resource "ibm_cloudant" "demo_cloudant_instance" {
 
 
 # Creates a database in the existing instance
-resource "ibm_cloudant_database" "cloudant_database" {
-  instance_crn  = ibm_cloudant.demo_cloudant_instance.crn
-  db            = "birdtag-demo"
+resource "ibm_cloudant_database" "this" {
+  instance_crn  = ibm_cloudant.this.crn
+  db            = "${var.prefix}-db"
 }
 
 
@@ -104,35 +88,48 @@ resource "ibm_cloudant_database" "cloudant_database" {
 ### Code Engine
 ###
 
-resource "ibm_code_engine_project" "code_engine_project_instance" {
-   name = "BirdTagging-Demo"
-   resource_group_id = ibm_resource_group.demo_resource_group.id
+resource "ibm_code_engine_project" "this" {
+   name = "${var.prefix}-project"
+   resource_group_id = ibm_resource_group.this.id
 }
 
 resource "ibm_code_engine_app" "ingest_app" {
-  project_id      = ibm_code_engine_project.code_engine_project_instance.project_id
-  name            = "birdtag-ingest-app"
+  project_id      = ibm_code_engine_project.this.project_id
+  name            = "${var.prefix}-ingest-app"
   image_reference = "docker.io/mnellemann/hellotide:latest"
   #image_reference = "docker.io/mnellemann/birdtag-ingest:latest"
+  image_port      = var.ingest_port
 
+  
   run_env_variables {
     type  = "literal"
     name  = "CLOUDANT_URL"
-    value = ibm_cloudant.demo_cloudant_instance.resource_id
+    value = ibm_cloudant.this.resource_id
   }
 
-  run_env_variables {
-    type      = "secret_full_reference"
-    name      = "CLOUDANT_APIKEY"
-    reference = "blabla"
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [
+      run_env_variables,
+    ]
   }
+
 
 }
 
+
 resource "ibm_code_engine_app" "present_app" {
-  project_id      = ibm_code_engine_project.code_engine_project_instance.project_id
-  name            = "birdtag-present-app"
+  project_id      = ibm_code_engine_project.this.project_id
+  name            = "${var.prefix}-present-app"
   image_reference = "docker.io/mnellemann/hellotide:latest"
   #image_reference = "docker.io/mnellemann/birdtag-ingest:latest"
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [
+      run_env_variables,
+    ]
+  }
+
 }
 
