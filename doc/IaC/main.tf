@@ -103,10 +103,11 @@ resource "ibm_code_engine_app" "ingest_app" {
   project_id      = ibm_code_engine_project.this.project_id
   name            = "${var.prefix}-ingest-app"
   image_reference = "docker.io/mnellemann/birdtag:latest"
+  image_port      = 8080
 
   #scale_min_instances = 1      # default is 0
   scale_max_instances = 3
-  scale_initial_instances = 1
+  #scale_initial_instances = 1
 
   # https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo
   scale_cpu_limit = "0.125"
@@ -121,7 +122,7 @@ resource "ibm_code_engine_app" "ingest_app" {
   run_env_variables {
     type  = "literal"
     name  = "CLOUDANT_URL"
-    value = "https://${ibm_cloudant.this.extensions["endpoints.public"]}"
+    value = format("https://%s", ibm_cloudant.this.extensions["endpoints.public"])
   }
 
   run_env_variables {
@@ -145,7 +146,7 @@ resource "ibm_code_engine_app" "ingest_app" {
   run_env_variables {
     type  = "literal"
     name  = "COS_ENDPOINT"
-    value = ibm_cos_bucket.image_bucket.region_location
+    value = format("https://%s", ibm_cos_bucket.image_bucket.s3_endpoint_public)
   }
 
   run_env_variables {
@@ -161,12 +162,11 @@ resource "ibm_code_engine_app" "ingest_app" {
     ]*/
   }
 
-  probe_liveness { }
-
   probe_readiness {
     type = "http"
     path = "/health"
-    timeout = 30
+    timeout = 5
+    initial_delay = 10
   }
 
 }
@@ -176,10 +176,11 @@ resource "ibm_code_engine_app" "present_app" {
   project_id      = ibm_code_engine_project.this.project_id
   name            = "${var.prefix}-present-app"
   image_reference = "docker.io/mnellemann/birdtag:latest"
+  image_port      = 8080
 
   #scale_min_instances = 1  # default is 0
   scale_max_instances = 3
-  scale_initial_instances = 1
+  #scale_initial_instances = 1
 
   scale_cpu_limit = "0.125"
   scale_memory_limit = "500M"
@@ -202,7 +203,7 @@ resource "ibm_code_engine_app" "present_app" {
   run_env_variables {
     type  = "literal"
     name  = "CLOUDANT_URL"
-    value = ibm_cloudant.this.extensions["endpoints.public"]
+    value = format("https://%s", ibm_cloudant.this.extensions["endpoints.public"])
   }
 
   run_env_variables {
@@ -226,7 +227,7 @@ resource "ibm_code_engine_app" "present_app" {
   run_env_variables {
     type  = "literal"
     name  = "COS_ENDPOINT"
-    value = ibm_cos_bucket.image_bucket.region_location
+    value = format("https://%s", ibm_cos_bucket.image_bucket.s3_endpoint_public)
   }
 
   run_env_variables {
@@ -236,18 +237,17 @@ resource "ibm_code_engine_app" "present_app" {
   }
 
   lifecycle {
-    create_before_destroy = true
+    //create_before_destroy = true
     /*ignore_changes = [
       run_env_variables,
     ]*/
   }
 
-  probe_liveness { }
-
   probe_readiness {
     type = "http"
     path = "/health"
-    timeout = 30
+    timeout = 5
+    initial_delay = 10
   }
 
 }

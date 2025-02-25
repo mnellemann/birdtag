@@ -12,7 +12,12 @@ We use [Terraform IaC](doc/IaC) to build the IBM Cloud infrastructure.
 
 ## Deployment
 
-TODO.
+```shell
+./gradlew clean build dockerBuild
+docker login
+docker tag birdtag:latest docker.io/mnellemann/birdtag:latest
+docker push docker.io/mnellemann/birdtag:latest
+```
 
 
 ## Configuration
