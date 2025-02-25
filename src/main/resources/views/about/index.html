@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Bird Tagging - About</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+
+
+  <!-- ./Navigation -->
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        About
+      </h1>
+    </div>
+  </section>
+
+  <section class="section p-3">
+    <div class="container">
+
+      <figure class="image is-fullscreen">
+        <img th:src="@{/assets/images/architecture.png}" alt="Image">
+      </figure>
+
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

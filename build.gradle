@@ -1,0 +1,81 @@
+plugins {
+    id("groovy")
+    id("com.magnetichq.client-dependencies") version "2.0.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.micronaut.application") version "4.4.4"
+    id("io.micronaut.aot") version "4.4.4"
+}
+
+version = "0.1"
+group = "biz.nellemann"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut.views:micronaut-views-thymeleaf")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("io.micronaut:micronaut-management")
+    implementation("commons-validator:commons-validator:1.9.0")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
+    compileOnly("io.micronaut:micronaut-http-client")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    testImplementation("io.micronaut:micronaut-http-client")
+
+    implementation("com.ibm.cloud:cloudant:0.10.1")
+    implementation("com.ibm.cos:ibm-cos-java-sdk:2.14.0")
+}
+
+
+application {
+    mainClass = "biz.nellemann.birdtag.Application"
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("21")
+    targetCompatibility = JavaVersion.toVersion("21")
+}
+
+graalvmNative.toolchainDetection = false
+
+micronaut {
+    runtime("netty")
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("biz.nellemann.*")
+    }
+    aot {
+        // Please review carefully the optimizations enabled below
+        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+        optimizeServiceLoading = false
+        convertYamlToJava = false
+        precomputeOperations = true
+        cacheEnvironment = true
+        optimizeClassLoading = true
+        deduceEnvironment = true
+        optimizeNetty = true
+        replaceLogbackXml = true
+    }
+}
+
+
+tasks.named("dockerfileNative") {
+    jdkVersion = "21"
+}
+
+
+
+clientDependencies {
+    installDir = 'src/main/resources/assets/vendor'
+    npm {
+        'bulma'('1.0.3', into: 'bulma') { include 'css/bulma.*' }
+        '@mdi/font'('7.4.47', into: 'mdi') { include 'css/*', 'fonts/*'}
+        'htmx.org'('2.0.4', into: 'htmx') { include 'htmx.js' }
+        'htmx-ext-loading-states'('2.0.0', into: 'htmx/ext') { include '*.js' }
+        'htmx-ext-response-targets'('2.0.1', into: 'htmx/ext') { include '*.js' }
+    }
+}

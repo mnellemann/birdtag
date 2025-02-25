@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-header">
+    <p class="card-header-title" th:text="${title}">Title</p>
+  </div>
+  <div class="card-image">
+    <figure class="image is-fullwidth">
+      <img th:src="${url}" alt="Placeholder image" />
+    </figure>
+  </div>
+  <div class="card-content">
+    <div class="content">
+      Station <span th:text="${station}"></span>
+      <br />
+      <small><time th:text="${timestamp}"></time></small>
+    </div>
+  </div>
+</div>

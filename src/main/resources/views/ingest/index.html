@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Bird Tagging - Ingest</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+
+
+  <!-- ./Navigation -->
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        Ingest
+      </h1>
+    </div>
+  </section>
+
+  <section class="section p-3">
+    <div class="container">
+
+      <form id="update-form" hx-ext="response-targets" hx-encoding='multipart/form-data'>
+
+        <label class="label" for="station">Station</label>
+        <div class="field has-addons">
+          <div class="control is-narrow">
+            <input class="input" type="text" id="station" name="station" placeholder="Unique ID of Station"
+                   th:value="${station}">
+            <!--<p class="help">See <a href="https://nodatime.org/TimeZones">TimeZones</a> for a list of Zone IDs</p>-->
+          </div>
+        </div>
+
+
+        <div class="file has-name">
+          <label class="file-label">
+            <input class="file-input" type="file" id="image" name="image" accept="image/png, image/jpeg"/>
+            <span class="file-cta">
+                <span class="file-icon">
+                  <i class="mdi mdi-file-find-outline"></i>
+                </span>
+                <span class="file-label">Choose an image…</span>
+              </span>
+            <button id="update-button" class="button is-info"
+                    hx-post='ingest/save'
+                    hx-confirm="Are you sure you want to upload ?"
+                    hx-target="next .response-ok"
+                    hx-target-error="next .response-error"
+                    data-loading-disable
+                    data-loading-aria-busy>Update
+            </button>
+          </label>
+        </div>
+
+        <div class="control">
+          <label class="label has-text-primary response-ok">
+            <progress class="progress is-hidden" id='progress' value='0' max='100'></progress>
+          </label>
+          <label class="label has-text-warning response-error"></label>
+        </div>
+
+
+      </form>
+
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
