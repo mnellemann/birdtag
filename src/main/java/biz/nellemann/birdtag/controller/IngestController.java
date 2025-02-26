@@ -51,12 +51,13 @@ public class IngestController {
         UUID uuid = UUID.randomUUID();
         ZonedDateTime now = ZonedDateTime.now();
 
+        String image_name = getFileExtension(uuid.toString(), image.getFilename());
         String image_path = String.format("%s/%d/%d/%d/%s",
             station,
             now.getYear(),
             now.getMonthValue(),
             now.getDayOfMonth(),
-            getFileExtension(uuid.toString(), image.getFilename())
+            image_name
         );
 
 
@@ -64,6 +65,7 @@ public class IngestController {
             String objectUrl = objectStorageService.createBinaryFile(image_path, String.valueOf(image.getContentType()), image.getBytes());
             Map<String, Object> properties = new HashMap<>();
             properties.put("timestamp", now.toString());
+            properties.put("name", image_name);
             properties.put("path", image_path);
             properties.put("url", objectUrl);
             properties.put("station", station);

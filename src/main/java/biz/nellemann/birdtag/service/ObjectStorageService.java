@@ -159,7 +159,7 @@ public class ObjectStorageService {
 
 
     public String getPublicUrl(String item) {
-        return String.format("https://%s/%s/%s", COS_ENDPOINT, COS_BUCKET_NAME, item);
+        return String.format("%s/%s/%s", COS_ENDPOINT, COS_BUCKET_NAME, item);
     }
 
 }

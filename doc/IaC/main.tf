@@ -102,12 +102,13 @@ resource "ibm_code_engine_project" "this" {
 resource "ibm_code_engine_app" "ingest_app" {
   project_id      = ibm_code_engine_project.this.project_id
   name            = "${var.prefix}-ingest-app"
-  image_reference = "docker.io/mnellemann/birdtag:latest"
   image_port      = 8080
+  image_reference = "docker.io/mnellemann/birdtag:latest"
 
-  #scale_min_instances = 1      # default is 0
+  scale_min_instances = 1      # default is 0
   scale_max_instances = 3
-  #scale_initial_instances = 1
+  scale_initial_instances = 1
+  scale_request_timeout = 10
 
   # https://cloud.ibm.com/docs/codeengine?topic=codeengine-mem-cpu-combo
   scale_cpu_limit = "0.125"
@@ -162,11 +163,24 @@ resource "ibm_code_engine_app" "ingest_app" {
     ]*/
   }
 
-  probe_readiness {
+  # Restart container if probe fails
+  probe_liveness {
     type = "http"
     path = "/health"
     timeout = 5
+    interval = 30
     initial_delay = 10
+    failure_threshold = 3
+  }
+
+  # Do not receive traffic if probe fails
+  probe_readiness {
+    type = "http"
+    path = "/probe"
+    timeout = 5
+    interval = 60
+    initial_delay = 10
+    failure_threshold = 3
   }
 
 }
@@ -175,12 +189,13 @@ resource "ibm_code_engine_app" "ingest_app" {
 resource "ibm_code_engine_app" "present_app" {
   project_id      = ibm_code_engine_project.this.project_id
   name            = "${var.prefix}-present-app"
-  image_reference = "docker.io/mnellemann/birdtag:latest"
   image_port      = 8080
+  image_reference = "docker.io/mnellemann/birdtag:latest"
 
-  #scale_min_instances = 1  # default is 0
+  scale_min_instances = 1  # default is 0
   scale_max_instances = 3
-  #scale_initial_instances = 1
+  scale_initial_instances = 1
+  scale_request_timeout = 10
 
   scale_cpu_limit = "0.125"
   scale_memory_limit = "500M"
@@ -237,17 +252,30 @@ resource "ibm_code_engine_app" "present_app" {
   }
 
   lifecycle {
-    //create_before_destroy = true
+    create_before_destroy = true
     /*ignore_changes = [
       run_env_variables,
     ]*/
   }
 
-  probe_readiness {
+  # Restart container if probe fails
+  probe_liveness {
     type = "http"
     path = "/health"
     timeout = 5
+    interval = 30
     initial_delay = 10
+    failure_threshold = 3
+  }
+
+  # Do not receive traffic if probe fails
+  probe_readiness {
+    type = "http"
+    path = "/probe"
+    timeout = 5
+    interval = 60
+    initial_delay = 10
+    failure_threshold = 3
   }
 
 }

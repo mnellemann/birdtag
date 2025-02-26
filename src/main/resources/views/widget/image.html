@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header">
-    <p class="card-header-title" th:text="${title}">Title</p>
+    <p class="card-header-title" th:text="${title}"></p>
   </div>
   <div class="card-image">
     <figure class="image is-fullwidth">
@@ -9,7 +9,7 @@
   </div>
   <div class="card-content">
     <div class="content">
-      Station <span th:text="${station}"></span>
+      Station <span th:text="${station}">unknown</span>
       <br />
       <small><time th:text="${timestamp}"></time></small>
     </div>

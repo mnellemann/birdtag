@@ -1,7 +1,6 @@
 package biz.nellemann.birdtag.controller;
 
 import biz.nellemann.birdtag.service.CloudantDataService;
-import biz.nellemann.birdtag.service.ObjectStorageService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -15,22 +14,18 @@ import java.util.Map;
 @Controller("/widget")
 public class WidgetController {
 
-
     private static final Logger log = LoggerFactory.getLogger(WidgetController.class);
 
     @Inject
     CloudantDataService cloudantDataService;
-
-    @Inject
-    ObjectStorageService objectStorageService;
 
 
     @Get(uri = "/latest")
     @View("widget/image.html")
     public HttpResponse<Map<?,?>> latest() {
         Map<String, Object> model = cloudantDataService.latestDocument();
-        model.put("title", "Latest Bird Image");
-        log.info("latest() - {}", model.toString());
+        model.put("title", "Latest Image");
+        log.info("latest() - {}", model);
         return HttpResponse.ok(model);
     }
 
@@ -38,9 +33,9 @@ public class WidgetController {
     @View("widget/image.html")
     @Get(uri = "/untagged")
     public HttpResponse<Map<?,?>> untagged() {
-        Map<String, Object> model = cloudantDataService.latestDocument();
-        model.put("title", "Random Untagged Image");
-        log.info("untagged() - {}", model.toString());
+        Map<String, Object> model = cloudantDataService.randomUnTaggedDocument();
+        model.put("title", "Random UntaggedImage");
+        log.info("untagged() - {}", model);
         return HttpResponse.ok(model);
     }
 
@@ -48,8 +43,10 @@ public class WidgetController {
     @View("widget/image.html")
     @Get(uri = "/tagged")
     public HttpResponse<Map<?,?>> tagged() {
-        Map<String, Object> model = cloudantDataService.latestDocument();
+        Map<String, Object> model = cloudantDataService.randomTaggedDocument();
         model.put("title", "Random Tagged Image");
-        log.info("tagged() - {}", model.toString());
-        return HttpResponse.ok(model);    }
+        log.info("tagged() - {}", model);
+        return HttpResponse.ok(model);
+    }
+
 }

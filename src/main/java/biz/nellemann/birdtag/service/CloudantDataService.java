@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Singleton
 public class CloudantDataService {
@@ -53,9 +55,9 @@ public class CloudantDataService {
     }
 
 
-    public void test() {
+    public String test() {
         ServerInformation response = cloudantService.getServerInformation().execute().getResult();
-        System.out.println(response);
+        return response.toString();
     }
 
 
@@ -176,14 +178,6 @@ public class CloudantDataService {
                 .execute()
                 .getResult();
 
-            // Note: for response byte stream use:
-            /*
-            InputStream documentAsByteStream =
-                client.getDocumentAsStream(documentInfoOptions)
-                    .execute()
-                    .getResult();
-            */
-
             // Add Bob Smith's address to the document
             document.put("address", "19 Front Street, Darlington, DL5 1TY");
 
@@ -196,18 +190,6 @@ public class CloudantDataService {
                     .db(DATABASE)
                     .document(document)
                     .build();
-
-            // ================================================================
-            // Note: for request byte stream use:
-            /*
-            PostDocumentOptions updateDocumentOptions =
-                new PostDocumentOptions.Builder()
-                    .db(exampleDbName)
-                    .contentType("application/json")
-                    .body(documentAsByteStream)
-                    .build();
-            */
-            // ================================================================
 
             DocumentResult updateDocumentResponse = cloudantService
                 .postDocument(updateDocumentOptions)
@@ -252,24 +234,72 @@ public class CloudantDataService {
 
     public Map<String, Object> latestDocument() {
 
+        Map<String, Object> responseMap = new HashMap<>();
+
         PostSearchOptions searchOptions = new PostSearchOptions.Builder()
             .db(DATABASE)
             .ddoc("allimages")
             .index("activeImages")
             .query("status:new")
-            .limit(1)
             .build();
 
         SearchResult response =
             cloudantService.postSearch(searchOptions).execute()
                 .getResult();
 
-        if(response.getTotalRows() == 1) {
-            return getDocument(response.getRows().get(0).getId());
+        if(response.getTotalRows() > 0) {
+            responseMap = getDocument(response.getRows().get(Math.toIntExact(response.getTotalRows()) -1).getId());
         }
 
-        System.out.println(response);
-        return null;
+        return responseMap;
+    }
+
+
+    public Map<String, Object> randomTaggedDocument() {
+
+        Map<String, Object> responseMap = new HashMap<>();
+
+        PostSearchOptions searchOptions = new PostSearchOptions.Builder()
+            .db(DATABASE)
+            .ddoc("allimages")
+            .index("activeImages")
+            .query("status:tagged")
+            .build();
+
+        SearchResult response =
+            cloudantService.postSearch(searchOptions).execute()
+                .getResult();
+
+        if(response.getTotalRows() > 0) {
+            int r = ThreadLocalRandom.current().nextInt(0, Math.toIntExact(response.getTotalRows()));
+            responseMap = getDocument(response.getRows().get(r).getId());
+        }
+
+        return responseMap;
+    }
+
+
+    public Map<String, Object> randomUnTaggedDocument() {
+
+        Map<String, Object> responseMap = new HashMap<>();
+
+        PostSearchOptions searchOptions = new PostSearchOptions.Builder()
+            .db(DATABASE)
+            .ddoc("allimages")
+            .index("activeImages")
+            .query("status:new")
+            .build();
+
+        SearchResult response =
+            cloudantService.postSearch(searchOptions).execute()
+                .getResult();
+
+        if(response.getTotalRows() > 0) {
+            int r = ThreadLocalRandom.current().nextInt(0, Math.toIntExact(response.getTotalRows()));
+            responseMap = getDocument(response.getRows().get(r).getId());
+        }
+
+        return responseMap;
     }
 
 }
