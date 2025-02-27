@@ -4,7 +4,6 @@ imports:
   revision: main
 jobs:
 - name: Github
-  jobExecutor: Docker
   steps:
   - !PushRepository
     name: push
