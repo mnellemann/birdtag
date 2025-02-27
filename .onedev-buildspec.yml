@@ -2,3 +2,7 @@ version: 38
 imports:
 - projectPath: common/java/gradle-docker
   revision: main
+properties:
+- name: IMAGE_NAME
+  value: gradle:8-jdk21
+  archived: false
