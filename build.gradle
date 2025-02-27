@@ -1,8 +1,9 @@
 plugins {
-    id("groovy")
+    //id("groovy")
     id("com.magnetichq.client-dependencies") version "2.0.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.micronaut.application") version "4.4.4"
+    //id("io.micronaut.crac") version "4.4.4"
     id("io.micronaut.aot") version "4.4.4"
 }
 
@@ -14,20 +15,21 @@ repositories {
 }
 
 dependencies {
-    //compileOnly("io.micronaut.crac:micronaut-crac")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.views:micronaut-views-thymeleaf")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut:micronaut-management")
+    //implementation("io.micronaut.crac:micronaut-crac")
     implementation("commons-validator:commons-validator:1.9.0")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0")
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
-    testImplementation("io.micronaut:micronaut-http-client")
 
     implementation("com.ibm.cloud:cloudant:0.10.1")
     implementation("com.ibm.cos:ibm-cos-java-sdk:2.14.0")
+
+    testImplementation("io.micronaut:micronaut-http-client")
 }
 
 
@@ -44,7 +46,7 @@ graalvmNative.toolchainDetection = false
 
 micronaut {
     runtime("netty")
-    testRuntime("spock2")
+    testRuntime("junit")
     processing {
         incremental(true)
         annotations("biz.nellemann.*")

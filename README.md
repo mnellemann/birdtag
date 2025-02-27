@@ -34,3 +34,8 @@ curl -X POST -F "image=@scanner-packaging-01.jpg" -F "station=x" http://localhos
 ```
 
 
+## TODO
+
+- Tag image
+- Vote up/down on tagged images (on correctness)
+- RaspberryPi w. camera and motion sensor

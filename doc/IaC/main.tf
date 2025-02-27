@@ -164,19 +164,18 @@ resource "ibm_code_engine_app" "ingest_app" {
   }
 
   # Restart container if probe fails
-  probe_liveness {
-    type = "http"
-    path = "/health"
-    timeout = 5
-    interval = 30
-    initial_delay = 10
-    failure_threshold = 3
-  }
+  #probe_liveness {
+  #  type = "tcp"
+  #  timeout = 5
+  #  interval = 30
+  #  initial_delay = 10
+  #  failure_threshold = 3
+  #}
 
   # Do not receive traffic if probe fails
   probe_readiness {
     type = "http"
-    path = "/probe"
+    path = "/"
     timeout = 5
     interval = 60
     initial_delay = 10
@@ -259,19 +258,18 @@ resource "ibm_code_engine_app" "present_app" {
   }
 
   # Restart container if probe fails
-  probe_liveness {
-    type = "http"
-    path = "/health"
-    timeout = 5
-    interval = 30
-    initial_delay = 10
-    failure_threshold = 3
-  }
+  #probe_liveness {
+  #  type = "tcp"
+  #  timeout = 5
+  #  interval = 30
+  #  initial_delay = 10
+  #  failure_threshold = 3
+  #}
 
   # Do not receive traffic if probe fails
   probe_readiness {
     type = "http"
-    path = "/probe"
+    path = "/"
     timeout = 5
     interval = 60
     initial_delay = 10
