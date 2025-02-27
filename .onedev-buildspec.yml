@@ -6,3 +6,23 @@ properties:
 - name: IMAGE_NAME
   value: gradle:8-jdk21
   archived: false
+jobs:
+  - name: Github
+    jobExecutor: Linux
+    steps:
+      - !PushRepository
+        name: push
+        remoteUrl: https://github.com/mnellemann/birdtag.git
+        passwordSecret: GITHUB-TOKEN
+        force: false
+        condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+    triggers:
+      - !TagCreateTrigger
+        branches: main
+    jobDependencies:
+      - jobName: Build Java App
+        requireSuccessful: true
+    retryCondition: never
+    maxRetries: 3
+    retryDelay: 30
+    timeout: 14400
