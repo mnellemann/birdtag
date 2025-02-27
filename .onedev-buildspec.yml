@@ -1,0 +1,4 @@
+version: 38
+imports:
+- projectPath: common/java/gradle-docker
+  revision: main
