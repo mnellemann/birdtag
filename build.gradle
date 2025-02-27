@@ -98,9 +98,15 @@ optimizedDockerPush {
 }
 
 tasks.named("dockerBuild") {
-    images = ["docker.io/mnellemann/birdtag:$project.version"]
+    images = [
+        "docker.io/mnellemann/birdtag:latest",
+        "docker.io/mnellemann/birdtag:$project.version"
+    ]
 }
 
 tasks.named("optimizedDockerBuild") {
-    images = ["docker.io/mnellemann/birdtag:$project.version"]
+    images = [
+        "docker.io/mnellemann/birdtag:latest",
+        "docker.io/mnellemann/birdtag:$project.version"
+    ]
 }
