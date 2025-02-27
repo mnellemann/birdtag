@@ -83,6 +83,20 @@ clientDependencies {
     }
 }
 
+dockerPush {
+    registryCredentials {
+        username = dockerUsername
+        password = dockerPassword
+    }
+}
+
+optimizedDockerPush {
+    registryCredentials {
+        username = dockerUsername
+        password = dockerPassword
+    }
+}
+
 tasks.named("dockerBuild") {
     images = ["docker.io/mnellemann/birdtag:$project.version"]
 }
