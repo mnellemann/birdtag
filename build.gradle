@@ -82,3 +82,11 @@ clientDependencies {
         'htmx-ext-response-targets'('2.0.1', into: 'htmx/ext') { include '*.js' }
     }
 }
+
+tasks.named("dockerBuild") {
+    images = ["docker.io/mnellemann/birdtag:$project.version"]
+}
+
+tasks.named("optimizedDockerBuild") {
+    images = ["docker.io/mnellemann/birdtag:$project.version"]
+}
