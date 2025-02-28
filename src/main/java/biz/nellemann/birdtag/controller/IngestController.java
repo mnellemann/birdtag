@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,9 +52,9 @@ public class IngestController {
         UUID uuid = UUID.randomUUID();
         ZonedDateTime now = ZonedDateTime.now();
 
-        String image_name = getFileExtension(uuid.toString(), image.getFilename());
+        String image_name = getFileExtension(uuid.toString().replaceAll("-","").toLowerCase(Locale.ROOT), image.getFilename());
         String image_path = String.format("%s/%d/%d/%d/%s",
-            station,
+            station.strip().replaceAll(" ", ""), // TODO: encode or point to relation
             now.getYear(),
             now.getMonthValue(),
             now.getDayOfMonth(),
@@ -62,13 +63,17 @@ public class IngestController {
 
 
         try {
-            String objectUrl = objectStorageService.createBinaryFile(image_path, String.valueOf(image.getContentType()), image.getBytes());
+            MediaType mediaType = image.getContentType().orElse(MediaType.APPLICATION_OCTET_STREAM_TYPE);
+            String objectUrl = objectStorageService.createBinaryFile(
+                image_path,
+                mediaType.toString(),
+                image.getBytes());
             Map<String, Object> properties = new HashMap<>();
             properties.put("timestamp", now.toString());
             properties.put("name", image_name);
             properties.put("path", image_path);
             properties.put("url", objectUrl);
-            properties.put("station", station);
+            properties.put("station", station.strip().replaceAll(" ", "")); // TODO: encode or point to relation
             properties.put("status", "new");
             properties.put("active", true);
 

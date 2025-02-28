@@ -1,17 +1,43 @@
-<div class="card">
+<div class="card" th:if="${id}">
   <div class="card-header">
     <p class="card-header-title" th:text="${title}"></p>
   </div>
   <div class="card-image">
     <figure class="image is-fullwidth">
-      <img th:src="${url}" alt="Placeholder image" />
+      <img th:src="${url} ?: @{/assets/images/bird_2679187.png}" alt="Placeholder image" />
     </figure>
   </div>
   <div class="card-content">
     <div class="content">
-      Station <span th:text="${station}">unknown</span>
+      <span class="mdi mdi-camera-wireless-outline"></span>&nbsp;&nbsp;<span th:text="${station}">unknown</span>
       <br />
-      <small><time th:text="${timestamp}"></time></small>
+
+      <span th:if="${status == 'tagged'}">
+        <span class="mdi mdi-tag-check-outline"></span>&nbsp;&nbsp;<span th:text="${species}"></span><br/>
+      </span>
+
     </div>
   </div>
+
+  <span th:switch="${status}">
+
+    <div class="card-footer" th:case="'new'">
+      <a  href="#" class="card-footer-item"
+         th:hx-post="@{/widget/tag/{id}(id=${id})}"
+         hx-prompt="Enter the bird species"
+         hx-confirm="Are you sure?"
+      >Tag Image</a>
+    </div>
+
+    <div class="card-footer" th:case="'tagged'">
+      <a href="#" class="card-footer-item">Confirm Tag</a>
+      <a href="#" class="card-footer-item">Refute Tag</a>
+    </div>
+
+    <div class="card-footer" th:case="*">
+      <a href="#" class="card-footer-item">Unknown</a>
+    </div>
+
+  </span>
+
 </div>

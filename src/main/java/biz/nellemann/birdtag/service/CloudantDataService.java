@@ -162,7 +162,7 @@ public class CloudantDataService {
     }
 
 
-    public void updateDocument(String documentName) {
+    public void updateDocument(String documentName, String key, Object value) {
 
         GetDocumentOptions documentInfoOptions =
             new GetDocumentOptions.Builder()
@@ -179,10 +179,12 @@ public class CloudantDataService {
                 .getResult();
 
             // Add Bob Smith's address to the document
-            document.put("address", "19 Front Street, Darlington, DL5 1TY");
+            //document.put("address", "19 Front Street, Darlington, DL5 1TY");
+            document.put(key, value);
+            document.put("status", "tagged");
 
             // Remove the joined property from document object
-            document.removeProperty("joined");
+            //document.removeProperty("joined");
 
             // Update the document in the database
             PostDocumentOptions updateDocumentOptions =
@@ -208,6 +210,9 @@ public class CloudantDataService {
     }
 
     public Map<String,Object> getDocument(String documentId) {
+
+        Map<String,Object> properties = null;
+
         GetDocumentOptions documentInfoOptions =
             new GetDocumentOptions.Builder()
                 .db(DATABASE)
@@ -223,14 +228,17 @@ public class CloudantDataService {
                 .getResult();
 
             document.get("url");
-            return document.getProperties();
+            properties = document.getProperties();
+            properties.put("id", documentId);
 
         } catch (ServiceResponseException sre) {
             log.error("getDocument() - Service Response Status Code: {}", sre.getStatusCode());
         }
 
-        return null;
+        log.info("getDocument() - {}", properties);
+        return properties;
     }
+
 
     public Map<String, Object> latestDocument() {
 

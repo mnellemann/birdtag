@@ -30,7 +30,7 @@ Environment variables must be configured, see [application.properties](src/main/
 ### Ingest image
 
 ```shell
-curl -X POST -F "image=@scanner-packaging-01.jpg" -F "station=x" http://localhost:8080/ingest/save
+curl -X POST -F "image=@bird.jpg" -F "station=xyz" http://localhost:8080/ingest/save
 ```
 
 

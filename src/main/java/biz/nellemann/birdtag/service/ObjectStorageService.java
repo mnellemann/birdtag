@@ -142,19 +142,20 @@ public class ObjectStorageService {
     }
 
 
-    public String createBinaryFile(String itemName, String contentType, byte[] data) {
+    public String createBinaryFile(String objectPath, String contentType, byte[] data) {
 
         InputStream newStream = new ByteArrayInputStream(data);
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(data.length);
         metadata.setContentType(contentType);
+        metadata.setContentDisposition("inline");
 
-        PutObjectRequest req = new PutObjectRequest(COS_BUCKET_NAME, itemName, newStream, metadata);
+        PutObjectRequest req = new PutObjectRequest(COS_BUCKET_NAME, objectPath, newStream, metadata);
         req.setAccessControlList(aclPublicRead);
         PutObjectResult res = cosClient.putObject(req);
 
-        return getPublicUrl(itemName);
+        return getPublicUrl(objectPath);
     }
 
 
