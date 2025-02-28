@@ -28,7 +28,7 @@ public class WidgetController {
     @View("widget/image.html")
     public HttpResponse<Map<?,?>> latest() {
         Map<String, Object> model = cloudantDataService.latestDocument();
-        model.put("title", "Latest Image");
+        model.put("title", "Most Recent Image");
         log.debug("latest() - {}", model);
         return HttpResponse.ok(model);
     }
@@ -38,7 +38,7 @@ public class WidgetController {
     @Get(uri = "/untagged")
     public HttpResponse<Map<?,?>> untagged() {
         Map<String, Object> model = cloudantDataService.randomUnTaggedDocument();
-        model.put("title", "Random UntaggedImage");
+        model.put("title", "Random Untagged Image");
         log.debug("untagged() - {}", model);
         return HttpResponse.ok(model);
     }

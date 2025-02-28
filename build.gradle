@@ -65,6 +65,21 @@ micronaut {
     }
 }
 
+graalvmNative {
+    binaries {
+        main {
+            imageName.set('mn-graalvm-application')
+            buildArgs.add('--verbose')
+            buildArgs.add('--native-image-info')
+            buildArgs.add('--initialize-at-build-time=ch.qos.logback')
+            buildArgs.add('--initialize-at-build-time=ch.qos.logback.classic.Logger')
+            //buildArgs.add('--initialize-at-build-time=de.siegmar.logbackgelf.GelfEncoder')
+            //buildArgs.add('--initialize-at-build-time=sun.nio.ch')
+            //buildArgs.add('--initialize-at-build-time=sun.nio.ch.DatagramChannelImpl')
+            //buildArgs.add('--trace-object-instantiation=sun.nio.ch.DatagramChannelImpl')
+        }
+    }
+}
 
 tasks.named("dockerfileNative") {
     jdkVersion = "21"

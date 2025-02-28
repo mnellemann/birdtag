@@ -23,45 +23,45 @@
   <section class="section p-3">
     <div class="container">
 
-      <form id="update-form" hx-ext="response-targets" hx-encoding='multipart/form-data'>
+      <form id="update-form" hx-ext="response-targets" hx-encoding='multipart/form-data'
+            hx-trigger="submit"
+            hx-post='ingest/save'
+            hx-confirm="Are you sure you want to upload ?"
+            hx-target="#response"
+            hx-validate="true"
+      >
 
         <label class="label" for="station">Station</label>
         <div class="field has-addons">
           <div class="control is-narrow">
             <input class="input" type="text" id="station" name="station" placeholder="Unique ID of Station"
-                   th:value="${station}">
-            <!--<p class="help">See <a href="https://nodatime.org/TimeZones">TimeZones</a> for a list of Zone IDs</p>-->
+                   th:value="${station}" minlength="3" autocomplete="off" required />
           </div>
         </div>
 
 
         <div class="file has-name">
           <label class="file-label">
-            <input class="file-input" type="file" id="image" name="image" accept="image/png, image/jpeg"/>
+            <input class="file-input" type="file" id="image" name="image" accept="image/png, image/jpeg" required/>
             <span class="file-cta">
                 <span class="file-icon">
                   <i class="mdi mdi-file-find-outline"></i>
                 </span>
                 <span class="file-label">Choose an image…</span>
               </span>
-            <button id="update-button" class="button is-info"
-                    hx-post='ingest/save'
-                    hx-confirm="Are you sure you want to upload ?"
-                    hx-target="next .response-ok"
-                    hx-target-error="next .response-error"
+            <button id="update-button" class="button is-info" type="submit"
                     data-loading-disable
-                    data-loading-aria-busy>Upload
-            </button>
+                    data-loading-aria-busy
+            >Upload</button>
           </label>
         </div>
 
         <div class="control">
-          <label class="label has-text-primary response-ok">
+          <label class="label">
             <progress class="progress is-hidden" id='progress' value='0' max='100'></progress>
           </label>
-          <label class="label has-text-warning response-error"></label>
+          <span id="response"></span>
         </div>
-
 
       </form>
 
@@ -69,5 +69,12 @@
   </section>
 
 </div>
+
+<script>
+  htmx.on('#form', 'htmx:xhr:progress', function(evt) {
+    htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
+  });
+</script>
+
 </body>
 </html>
