@@ -57,6 +57,29 @@ resource "ibm_cos_bucket" "image_bucket" {
 }
 
 
+###
+### IBM DB2
+###
+
+#resource "ibm_db2" "this" {
+#  name              = var.prefix
+#  service           = "dashdb-for-transactions"
+#  plan              = "lite"
+#  location          = "eu-gb" // NOTE: Lite plan not available from Frankfurt or Madrid
+#  resource_group_id = ibm_resource_group.this.id
+#  service_endpoints = "public-and-private"
+#  disk_encryption_instance_crn = "none"
+#  disk_encryption_key_crn = "none"
+#  oracle_compatibility = "no"
+#  #subscription_id = "<id_of_subscription_plan>"
+#
+#  timeouts {
+#    create = "720m"
+#    update = "30m"
+#    delete = "30m"
+#  }
+#}
+
 
 ###
 ### Cloudant DB
@@ -79,7 +102,7 @@ resource "ibm_cloudant" "this" {
 # Creates a database in the existing instance
 resource "ibm_cloudant_database" "this" {
   instance_crn  = ibm_cloudant.this.crn
-  db            = "${var.prefix}-db"
+  db            = var.prefix
 }
 
 resource "ibm_resource_key" "cloudant_credentials" {

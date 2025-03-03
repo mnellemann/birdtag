@@ -1,0 +1,33 @@
+<div class="grid">
+
+  <div class="cell" th:each="image : ${images}">
+
+    <div class="card" th:if="${image.id}">
+      <div class="card-header">
+        <p class="card-header-title" th:text="${image.title}"></p>
+      </div>
+      <div class="card-image">
+        <figure class="image is-fullwidth">
+          <img th:src="${image.url} ?: @{/assets/images/bird_2679187.png}" alt="Placeholder image" />
+        </figure>
+      </div>
+      <div class="card-content">
+        <div class="content">
+          <span class="mdi mdi-camera-wireless-outline"></span>&nbsp;&nbsp;<span th:text="${image.station}">unknown</span>
+          <br />
+
+          <span th:if="${image.status == 'tagged'}">
+            <span class="mdi mdi-tag-check-outline"></span>&nbsp;&nbsp;<span th:text="${image.species}"></span><br/>
+          </span>
+
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+</div>
+

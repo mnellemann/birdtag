@@ -1,0 +1,11 @@
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr><th>ID</th><th>Tag</th></tr>
+  </thead>
+  <tbody>
+    <tr th:each="tag : ${tags}">
+      <td><span th:text="${tag.id}"> ID </span></td>
+      <td><span th:text="${tag.name}"> Tag </span></td>
+    </tr>
+  </tbody>
+</table>

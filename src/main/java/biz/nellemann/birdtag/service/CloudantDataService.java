@@ -11,9 +11,7 @@ import com.ibm.cloud.cloudant.v1.Cloudant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Singleton
@@ -49,6 +47,7 @@ public class CloudantDataService {
         try {
             createDatabase();
             createDesignDocuments();
+            createDesignDocuments2();
         } catch (ServiceResponseException ignored) {
 
         }
@@ -84,6 +83,32 @@ public class CloudantDataService {
             }
         }
 
+    }
+
+
+    private void createDesignDocuments2() {
+
+        SearchIndexDefinition activeIndex =
+            new SearchIndexDefinition.Builder()
+                .index("function(doc) { index(\"timestamp\", doc.timestamp); index(\"active\", doc.active); index(\"status\", doc.status); }")
+                .build();
+
+        DesignDocument designDocument = new DesignDocument();
+        designDocument.setIndexes(Collections.singletonMap("activeTags", activeIndex));
+
+
+        PutDesignDocumentOptions designDocumentOptions =
+            new PutDesignDocumentOptions.Builder()
+                .db(DATABASE)
+                .designDocument(designDocument)
+                .ddoc("alltags")
+                .build();
+
+        DocumentResult allImagesResult =
+            cloudantService.putDesignDocument(designDocumentOptions).execute()
+                .getResult();
+
+        System.out.println(allImagesResult);
     }
 
 
@@ -125,24 +150,25 @@ public class CloudantDataService {
                 .ddoc("allimages")
                 .build();
 
-        DocumentResult allusersResponse =
+        DocumentResult allImagesResult =
             cloudantService.putDesignDocument(designDocumentOptions).execute()
                 .getResult();
 
-        System.out.println(allusersResponse);
+        System.out.println(allImagesResult);
     }
-
 
 
     public String createDocument(Map<String,Object> properties) {
 
         Document newDocument = new Document();
         newDocument.setProperties(properties);
+
         PostDocumentOptions createDocumentOptions =
             new PostDocumentOptions.Builder()
                 .db(DATABASE)
                 .document(newDocument)
                 .build();
+
         try {
             DocumentResult createDocumentResponse = cloudantService
                 .postDocument(createDocumentOptions)
@@ -207,6 +233,39 @@ public class CloudantDataService {
             log.error("updateDocument() - Document update failed: ({}) {} ", nfe.getStatusCode(), documentName);
         }
 
+    }
+
+    public List<?> find(String prefix) {
+
+        ArrayList<Map<String,Object>> list = new ArrayList<>();
+
+        Map<String, Object> selector = Collections.singletonMap(
+            "_id",
+            Collections.singletonMap("$beginsWith", prefix));
+
+        Map<String, String> fieldSort = Collections.singletonMap("timestamp", "desc");
+
+        PostFindOptions findOptions = new PostFindOptions.Builder()
+            .db(DATABASE)
+            .selector(selector)
+            .fields(Arrays.asList("_id", "timestamp", "name"))
+            //.addSort(fieldSort)
+            .limit(25)
+            .build();
+
+        FindResult response =
+            cloudantService.postFind(findOptions).execute()
+                .getResult();
+
+        response.getDocs().forEach(doc -> {
+            log.info("doc: {}", doc.toString());
+            list.add(getDocument(doc.getId()));
+        });
+
+        System.out.println(response);
+        log.info("list(): {}", list);
+
+        return list;
     }
 
     public Map<String,Object> getDocument(String documentId) {

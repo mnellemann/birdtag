@@ -69,6 +69,7 @@ public class IngestController {
                 mediaType.toString(),
                 image.getBytes());
             Map<String, Object> properties = new HashMap<>();
+            properties.put("_id", String.format("image:%s", image_name));
             properties.put("timestamp", now.toString());
             properties.put("name", image_name);
             properties.put("path", image_path);

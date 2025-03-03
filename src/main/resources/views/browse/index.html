@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <title>Bird Tagging - Browse</title>
+</head>
+<body>
+
+<div layout:fragment="page-content">
+
+
+  <!-- ./Navigation -->
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        Browse
+      </h1>
+    </div>
+  </section>
+
+  <section class="section p-3">
+    <div class="container">
+      <p>Filter / Search</p>
+    </div>
+  </section>
+
+
+  <section class="section p-3">
+    <div class="container" th:hx-get="@{/browse/list}" hx-trigger="load">
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
